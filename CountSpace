@@ -1,0 +1,28 @@
+using System;
+
+namespace CountSpace
+{ 
+    internal class Program
+{
+    static void Main(string[] args)
+    {
+        Console.Write("Enter a sentence: ");
+        string sent = Console.ReadLine();
+
+        int space = 0;
+
+        for (int i = 0; i < sent.Length; i++)
+        {
+
+            if (sent[i] == ' ')
+            {
+                space++;
+            }
+        }
+
+        Console.WriteLine("Number of spaces: " + space);
+
+
+    }
+}
+}
