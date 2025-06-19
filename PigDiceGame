@@ -13,7 +13,7 @@ namespace PigDiceGame
         {
             Random rand = new Random();      // For rolling the dice
             int totalScore = 0;              // Total score 
-            int count = 0;               // To count how many turns
+            int count = 0;                   //count turns
 
 
             while (totalScore < 20)
