@@ -1,0 +1,67 @@
+using System;
+
+namespace PigDiceGame
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            PlayGame(); 
+        }
+
+        static void PlayGame()
+        {
+            Random rand = new Random();      // For rolling the dice
+            int totalScore = 0;              // Total score 
+            int count = 0;               // To count how many turns
+
+
+            while (totalScore < 20)
+            {
+                int turnScore = 0;
+                count++;
+
+                Console.WriteLine("TURN {0}",count);
+
+
+                while (true)
+                {
+                    Console.Write("Roll or hold? (r/h): ");
+                    string choice = Console.ReadLine();
+
+                    if (choice == "r")
+                    {
+                        int die = rand.Next(1, 7); // Roll the die (1–6)
+                        Console.WriteLine("Die: " + die);
+
+                        if (die == 1)
+                        {
+                            Console.WriteLine("Turn over. No score.");
+                            turnScore = 0;
+                            break;
+                        }
+                        else
+                        {
+                            turnScore += die;
+                        }
+                    }
+                    else if (choice == "h")
+                    {
+                        totalScore += turnScore;
+                        Console.WriteLine("Score for turn: {0}",turnScore);
+                        Console.WriteLine("Total score: {0}",totalScore);
+                        break;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid input. Please enter 'r' or 'h'.");
+                    }
+                }
+            }
+
+           
+            Console.WriteLine("You finished in {0} turns",count);
+            Console.WriteLine("Game over!");
+        }
+    }
+}
