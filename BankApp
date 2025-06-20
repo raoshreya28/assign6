@@ -72,9 +72,9 @@ namespace BankApp
             {
                 Console.WriteLine($"Round {round}:");
 
-
+                //Account 1's turn
                 Console.Write($"{account1.GetAccountHolder()} Withdraw or Deposit (w/d): ");
-                string choice1 = Console.ReadLine().ToLower();
+                string choice1 = Console.ReadLine();
                 Console.Write("Amount: ");
                 double amount1 = Convert.ToDouble(Console.ReadLine());
 
@@ -85,9 +85,9 @@ namespace BankApp
                 else
                     Console.WriteLine("Invalid choice.");
 
-             
+                //Account 2's turn
                 Console.Write($"{account2.GetAccountHolder()} Withdraw or Deposit (w/d): ");
-                string choice2 = Console.ReadLine().ToLower();
+                string choice2 = Console.ReadLine();
                 Console.Write("Amount: ");
                 double amount2 = Convert.ToDouble(Console.ReadLine());
 
