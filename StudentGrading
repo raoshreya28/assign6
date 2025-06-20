@@ -1,0 +1,67 @@
+using System;
+namespace StudentGrading{
+
+public class Student
+{
+    private string name;
+    private int marks;
+    private char grade;
+
+    public Student(string name)
+    {
+        this.name = name;
+        this.marks = 0;   //default marks
+        this.grade = 'D'; //default grade
+    }
+
+    public Student(string name, int marks)
+    {
+        this.name = name;
+        this.marks = marks;
+        this.grade = 'D';  
+    }
+
+    public Student(string name, int marks, char grade)
+    {
+        this.name = name;
+        this.marks = marks;
+        this.grade = grade;
+    }
+
+    public void AssignGrade()
+    {
+        if (marks >= 90)
+            grade = 'A';
+        else if (marks >= 80)
+            grade = 'B';
+        else if (marks >= 70)
+            grade = 'C';
+        else
+            grade = 'D';
+    }
+
+    public void DisplayInfo()
+    {
+        Console.WriteLine("Name: {0}, Marks: {1}, Grade: {2}", name, marks,grade);
+    }
+}
+
+class Methods
+{
+    static void Main(string[] args)
+    {
+        Student s1 = new Student("Shreya");
+        s1.AssignGrade();
+        s1.DisplayInfo();
+
+        Student s2 = new Student("Riya", 70);  //grade will be calculated based on marks on calling AssignGrade
+        s2.AssignGrade();
+        s2.DisplayInfo();
+
+        Student s3 = new Student("Raj", 80, 'D'); //grade will be overridden after calling AssignGrade based on marks
+        s3.AssignGrade();
+        s3.DisplayInfo();
+    }
+}
+
+}
