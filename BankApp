@@ -1,0 +1,119 @@
+using System;
+
+namespace BankApp
+{
+    public class BankAccount
+    {
+        private string accountHolder;
+        private double balance;
+
+        public BankAccount(string name, double startingBalance)
+        {
+            accountHolder = name;
+            balance = startingBalance;
+        }
+
+        public void Deposit(double amount)
+        {
+            if (amount <= 0)
+            {
+                Console.WriteLine("Invalid deposit amount.");
+                return;
+            }
+
+            balance += amount;
+            Console.WriteLine($"{accountHolder} deposited {amount}. New balance: {balance}");
+        }
+
+        public void Withdraw(double amount)
+        {
+            if (amount <= 0)
+            {
+                Console.WriteLine("Invalid withdraw amount.");
+                return;
+            }
+
+            if (amount > balance)
+            {
+                Console.WriteLine($"{accountHolder} cannot withdraw {amount}. Not enough balance.");
+                return;
+            }
+
+            balance -= amount;
+            Console.WriteLine($"{accountHolder} withdrew {amount}. New balance: {balance}");
+        }
+
+        public double GetBalance()
+        {
+            return balance;
+        }
+
+        public string GetAccountHolder()
+        {
+            return accountHolder;
+        }
+    }
+
+    class BankGame
+    {
+        static void Main(string[] args)
+        {
+            Random rand = new Random();
+
+            BankAccount account1 = new BankAccount("Account1", rand.Next(3000, 7000));
+            BankAccount account2 = new BankAccount("Account2", rand.Next(3000, 7000));
+
+            Console.WriteLine("Starting Bank Game");
+            Console.WriteLine($"{account1.GetAccountHolder()} starting balance: {account1.GetBalance()}");
+            Console.WriteLine($"{account2.GetAccountHolder()} starting balance: {account2.GetBalance()}");
+            Console.WriteLine();
+
+            for (int round = 1; round <= 3; round++)
+            {
+                Console.WriteLine($"Round {round}:");
+
+
+                Console.Write($"{account1.GetAccountHolder()} Withdraw or Deposit (w/d): ");
+                string choice1 = Console.ReadLine().ToLower();
+                Console.Write("Amount: ");
+                double amount1 = Convert.ToDouble(Console.ReadLine());
+
+                if (choice1 == "w")
+                    account1.Withdraw(amount1);
+                else if (choice1 == "d")
+                    account1.Deposit(amount1);
+                else
+                    Console.WriteLine("Invalid choice.");
+
+             
+                Console.Write($"{account2.GetAccountHolder()} Withdraw or Deposit (w/d): ");
+                string choice2 = Console.ReadLine().ToLower();
+                Console.Write("Amount: ");
+                double amount2 = Convert.ToDouble(Console.ReadLine());
+
+                if (choice2 == "w")
+                    account2.Withdraw(amount2);
+                else if (choice2 == "d")
+                    account2.Deposit(amount2);
+                else
+                    Console.WriteLine("Invalid choice.");
+
+                Console.WriteLine();
+            }
+
+            double final1 = account1.GetBalance();
+            double final2 = account2.GetBalance();
+
+            Console.WriteLine("Final Results:");
+            Console.WriteLine($"{account1.GetAccountHolder()} final balance: {final1}");
+            Console.WriteLine($"{account2.GetAccountHolder()} final balance: {final2}");
+
+            if (final1 > final2)
+                Console.WriteLine($"{account1.GetAccountHolder()} wins!");
+            else if (final2 > final1)
+                Console.WriteLine($"{account2.GetAccountHolder()} wins!");
+            else
+                Console.WriteLine("It’s a tie!");
+        }
+    }
+}
