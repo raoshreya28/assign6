@@ -40,16 +40,16 @@ class Program
         Calculator calc = new Calculator();
 
         
-        Console.WriteLine("Adding two integers: 5 + 10");
-        Console.WriteLine("Result: {0}", calc.Add(5, 10));
+        Console.WriteLine("Adding two integers: 10 + 10");
+        Console.WriteLine("Result: {0}", calc.Add(10, 10));
 
 
-        Console.WriteLine("Adding two doubles: 3.5 + 4.7");
-        Console.WriteLine("Result: {0}", calc.Add(3.5, 4.7));
+        Console.WriteLine("Adding two doubles: 5.2 + 4.2");
+        Console.WriteLine("Result: {0}", calc.Add(5.2, 4.2));
 
    
-        Console.WriteLine("Adding array of integers: 1 + 2 + 3 + 4 + 5");
-        Console.WriteLine("Result: {0}", calc.Add(new int[] { 1, 2, 3, 4, 5 }));
+        Console.WriteLine("Adding array of integers: 11 + 12 + 13 + 14 + 15");
+        Console.WriteLine("Result: {0}", calc.Add(new int[] { 11, 12, 13, 14, 15 }));
 
 
         Console.WriteLine("Adding array: null");
