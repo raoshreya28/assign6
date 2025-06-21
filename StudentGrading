@@ -58,7 +58,7 @@ class Methods
         s2.AssignGrade();
         s2.DisplayInfo();
 
-        Student s3 = new Student("Raj", 80, 'D'); //grade will be overridden after calling AssignGrade based on marks
+        Student s3 = new Student("Raj", 80, 'D'); //grade will be updated after calling AssignGrade based on marks
         s3.AssignGrade();
         s3.DisplayInfo();
     }
