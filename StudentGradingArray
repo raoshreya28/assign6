@@ -1,0 +1,85 @@
+using System;
+
+namespace StudentGrading
+{   public class Student 
+    {
+        string StudentName;
+        string rollNo;
+        int[] marks = new int[5];
+        double avg;
+        string grade;
+     
+
+        public Student(string studentName, string rollNo, int[] marks  )
+        {
+            StudentName = studentName;
+            this.rollNo = rollNo;
+            this.marks = marks;
+        }
+
+       public double calculateAverage() 
+        {
+            int sum = 0;
+            for(int i = 0; i < marks.Length; i++)
+            {
+                sum = sum + marks[i];
+            }
+            avg= sum / marks.Length;
+            return avg;
+        
+        }
+
+        public void CalculateGrade() 
+        {
+            if (avg >= 90 && avg <= 100)
+            {
+                grade = "A+";
+            }
+            else if (avg >= 80 && avg <= 89)
+            {
+                grade = "A";
+            }
+            else if (avg >= 70 && avg <= 79)
+            {
+                grade = "B";
+            }
+            else if (avg >= 60 && avg <= 69)
+            {
+                grade = "C";
+            }
+            else if (avg >= 50 && avg <= 59)
+            {
+                grade = "D";
+            }
+            else if (avg < 50) 
+            {
+                grade = "E";
+            }
+
+        }
+
+        public void printReport() 
+        { 
+            Console.WriteLine($"Student Report Card");
+            Console.WriteLine("---------------------");
+            Console.WriteLine($"Name    : {StudentName}");
+            Console.WriteLine($"Roll No : {rollNo}");
+            Console.WriteLine($"Marks   : [{string.Join(", ", marks)}]");
+            Console.WriteLine($"Average : {avg}");
+            Console.WriteLine($"Grade   : {grade}");
+
+        }
+
+    }
+    public class Program
+    {
+        static void Main(string[] args)
+        {
+            int[] marks = new int[] { 78, 85, 90, 88, 76 };
+            Student s1 = new Student("Shreya", "R102", marks);
+            s1.calculateAverage();      
+            s1.CalculateGrade();
+            s1.printReport();
+        }
+    }
+}
