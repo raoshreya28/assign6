@@ -1,0 +1,43 @@
+using System;
+
+namespace EnumTraffic
+{
+   
+    enum TrafficLight
+    {
+        RED,
+        YELLOW,
+        GREEN
+    }
+
+    class Program
+    {
+        
+        static void Action(TrafficLight signal)
+        {
+            switch (signal)
+            {
+                case TrafficLight.RED:
+                    Console.WriteLine("Stop");
+                    break;
+                case TrafficLight.YELLOW:
+                    Console.WriteLine("Get Ready");
+                    break;
+                case TrafficLight.GREEN:
+                    Console.WriteLine("Go");
+                    break;
+                default:
+                    Console.WriteLine("Invalid Signal");
+                    break;
+            }
+        }
+
+        static void Main(string[] args)
+        {
+           
+            Action(TrafficLight.RED);     
+            Action(TrafficLight.YELLOW);  
+            Action(TrafficLight.GREEN);  
+        }
+    }
+}
