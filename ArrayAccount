@@ -1,0 +1,160 @@
+
+using System;
+namespace ArrayAccount 
+{
+    class Account
+    {
+        
+
+        public string AccountNumber { get; private set; }
+        public string Name { get; set; }
+        public double Balance { get; private set; }
+        public string AccountType { get; set; }
+
+        private static Random rand = new Random();
+
+        public Account(string name, string type, double balance)
+        {
+            Name = name;
+            AccountType = type;
+            Balance = balance;
+            AccountNumber = "IDBI" + rand.Next(100000000, 999999999);
+        }
+
+        public void Deposit(double amount)
+        {
+            Balance += amount;
+            Console.WriteLine("Deposit successful.");
+        }
+
+        public void Withdraw(double amount)
+        {
+            if (Balance - amount >= 500)
+            {
+                Balance -= amount;
+                Console.WriteLine("Withdrawal successful.");
+            }
+            else
+            {
+                Console.WriteLine("Minimum balance 500 must be maintained.");
+            }
+        }
+
+        public void ShowBalance()
+        {
+            Console.WriteLine($"Account No: {AccountNumber}");
+            Console.WriteLine($"Name: {Name}");
+            Console.WriteLine($"Type: {AccountType}");
+            Console.WriteLine($"Balance: {Balance}");
+        }
+    }
+
+    class Program
+    {
+        static void Main()
+        {
+            Console.Write("How many accounts do you want to create? ");
+            int size = int.Parse(Console.ReadLine());
+            Account[] accounts = new Account[size];
+            int count = 0;
+
+            while (true)
+            {
+                Console.WriteLine("\n1. Create Account\n2. View Balance\n3. Deposit\n4. Withdraw\n5. Exit");
+                Console.Write("Enter choice: ");
+                int ch = int.Parse(Console.ReadLine());
+
+                if (ch == 1)
+                {
+                    if (count == size)
+                    {
+                        Console.WriteLine("Account limit reached.");
+                        continue;
+                    }
+
+                    Console.Write("Name: ");
+                    string name = Console.ReadLine();
+                    Console.Write("Type (savings/current): ");
+                    string type = Console.ReadLine();
+                    Console.Write("Initial Deposit (min 500): ");
+                    double deposit = double.Parse(Console.ReadLine());
+
+                    if (deposit < 500)
+                    {
+                        Console.WriteLine("Initial deposit must be at least 500.");
+                        continue;
+                    }
+
+                    Account acc = new Account(name, type, deposit);
+
+                    // Uniqueness check
+                    bool exists = false;
+                    for (int i = 0; i < count; i++) 
+                    {
+                        if (accounts[i].AccountNumber == acc.AccountNumber)
+                            exists = true;
+                    }
+                       
+
+                    if (!exists)
+                    {
+                        accounts[count++] = acc;
+                        Console.WriteLine("Account created. Account No: " + acc.AccountNumber);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Duplicate account number. Try again.");
+                    }
+                }
+
+                else if (ch >= 2 && ch <= 4)
+                {
+                    Console.Write("Enter Account Number: ");
+                    string accNum = Console.ReadLine();
+                    Account found = null;
+
+                    for (int i = 0; i < count; i++)
+                    {
+                        if (accounts[i].AccountNumber == accNum)
+                        {
+                            found = accounts[i];
+                            break;
+                        }
+                    }
+
+                    if (found == null)
+                    {
+                        Console.WriteLine("Account not found.");
+                        continue;
+                    }
+
+                    if (ch == 2)
+                        found.ShowBalance();
+                    else if (ch == 3)
+                    {
+                        Console.Write("Enter amount: ");
+                        found.Deposit(double.Parse(Console.ReadLine()));
+                    }
+                    else if (ch == 4)
+                    {
+                        Console.Write("Enter amount: ");
+                        found.Withdraw(double.Parse(Console.ReadLine()));
+                    }
+                }
+
+                else if (ch == 5)
+                {
+                    Console.WriteLine("Thank you");
+                    break;
+                }
+
+                else
+                {
+                    Console.WriteLine("Invalid choice.");
+                }
+            }
+        }
+    }
+
+}
+
