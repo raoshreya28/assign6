@@ -1,0 +1,35 @@
+using System;
+namespace Day
+{
+    
+
+    public class Program
+    {
+        enum Day
+        {
+            Monday = 1,
+            Tuesday,
+            Wednesday,
+            Thursday,
+            Friday,
+            Saturday,
+            Sunday
+        }
+
+        public static void Main()
+        {
+            Console.Write("Enter a number (1-7): ");
+            int num = Convert.ToInt32(Console.ReadLine());
+
+            if (num >= 1 && num <= 7)
+            {
+                Console.WriteLine("Day is: " + (Day)num);
+            }
+            else
+            {
+                Console.WriteLine("Invalid number!");
+            }
+        }
+    }
+
+}
