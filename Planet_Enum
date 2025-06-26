@@ -1,0 +1,49 @@
+using System;
+
+namespace Planet_Enum
+{
+    internal class Program
+    {
+        enum Planet
+        {
+            MERCURY,
+            VENUS,
+            EARTH,
+            MARS,
+            JUPITER,
+            SATURN,
+            URANUS,
+            NEPTUNE
+        }
+
+        static void Main(string[] args)
+        {
+           
+            double[] gravityValues = {
+                0.38,   
+                0.91,   
+                1.00,  
+                0.38,   
+                2.34,   
+                1.06,  
+                0.92,   
+                1.19    
+            };
+
+            Console.Write("Enter your weight on Earth (kg): ");
+            double earthWeight = double.Parse(Console.ReadLine());
+
+            int planetCount = Enum.GetNames(typeof(Planet)).Length;
+
+            Console.WriteLine("\nYour weight on each planet:");
+            for (int i = 0; i < planetCount; i++)
+            {
+                Planet planet = (Planet)i;  
+                double gravity = gravityValues[i];
+                double planetWeight = earthWeight * gravity;
+
+                Console.WriteLine($"{planet}: {planetWeight} kg");
+            }
+        }
+    }
+}
