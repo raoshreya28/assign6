@@ -1,0 +1,80 @@
+//Product.cs
+using System;
+namespace Inheritance_this_magic
+{  public class Product
+        {
+            public int id { get; set; }
+            public string name { get; set; }
+            public double price { get; set; }
+
+
+            public Product(int id, string name, double price)
+            {
+                this.id = id;
+                this.name = name;
+                this.price = price;
+                
+            }
+
+           
+            public virtual void Display()
+            {
+                Console.WriteLine($"Id : {id}");
+                Console.WriteLine($"Name : {name}");
+                Console.WriteLine($"Price : {price}");
+               
+            }
+   }
+    
+
+}
+//DiscountedProduct.cs
+using System;
+using System.Diagnostics;
+namespace Inheritance_this_magic
+{
+    public class DiscountedProduct:Product
+    {
+        private const double Discount = 10.00;
+        public DiscountedProduct(int id,string name,double price):base(id,name,price) { }
+
+        public double CalculateDiscount()
+        {
+            return price - (Discount / 100) * price;
+
+        }
+
+        public override void Display()
+        {
+              base.Display();
+            Console.WriteLine($"Discount on Price : {Discount}%");
+            Console.WriteLine($"Price after Discount : {CalculateDiscount()}");
+            Console.WriteLine();
+        }
+    }
+}
+//Program.cs
+
+using System;
+namespace Inheritance_this_magic
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            DiscountedProduct p1 = new DiscountedProduct(100, "Laptop", 45000);
+            Console.WriteLine("Product 1 Details");
+            p1.Display();
+
+            DiscountedProduct p2 = new DiscountedProduct(102, "Mobile", 50000);
+            Console.WriteLine("Product 2 Details");
+            p2.Display();
+
+            DiscountedProduct p3 = new DiscountedProduct(104, "AC", 60000);
+            Console.WriteLine("Product 3 Details");
+            p3.Display();
+
+
+        }
+    }
+}
