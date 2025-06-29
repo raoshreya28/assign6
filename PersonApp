@@ -1,0 +1,93 @@
+//Person.cs
+
+using System;
+namespace PersonApp
+{
+    public class Person
+    {
+        public enum BodyType
+        {
+            Underweight,
+            Normal,
+            Overweight,
+            Obese
+        }
+        public int id { get; set; }
+        public string name { get; set; }
+        public int age {  get; set; }
+        public double height {  get; set; }
+        public double weight {  get; set; }
+
+        public Person(int id, string name, int age, double height, double weight)
+        {
+            this.id = id;
+            this.name = name;
+            this.age = age;
+            this.height = height;
+            this.weight = weight;
+        }
+
+        public Person(int id,string name,int age) 
+        { 
+            this.id=id;
+            this.name = name;
+            this.age = age;
+            height = 1.54;   //default 5 ft = 1.54 m
+            weight = 50;
+        
+        }
+
+        public double Calculate_BMI() 
+        {
+            return weight / (height * height);
+
+
+        }
+
+        public BodyType GetBodyType()
+        {
+            double bmi = Calculate_BMI();
+
+            if (bmi < 18.5)
+                return BodyType.Underweight;
+            else if (bmi < 25)
+                return BodyType.Normal;
+            else if (bmi < 30)
+                return BodyType.Overweight;
+            else
+                return BodyType.Obese;
+        }
+
+        public void Display()
+        {
+            Console.WriteLine($"ID: {id}");
+            Console.WriteLine($"Name: {name}");
+            Console.WriteLine($"Age: {age}");
+            Console.WriteLine($"Height: {height}");
+            Console.WriteLine($"Weight: {weight}");
+            Console.WriteLine($"BMI: {Calculate_BMI():F2}");
+            Console.WriteLine($"Body Type: {GetBodyType()}");
+            Console.WriteLine();
+        }
+
+    }
+}
+//Program.cs
+
+using System;
+namespace PersonApp
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("Person 1 :");
+            Person p1 = new Person(101, "Riya", 22, 1.65, 45);
+            p1.Display();
+
+            Console.WriteLine("Person 2 :");//default height and weight
+            Person p2 = new Person(102, "Raj", 30); 
+            p2.Display();
+        }
+    }
+}
