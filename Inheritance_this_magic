@@ -35,7 +35,7 @@ namespace Inheritance_this_magic
 {
     public class DiscountedProduct:Product
     {
-        private const double Discount = 10.00;
+        private const double Discount = 10.00; //to avoid magic numbers
         public DiscountedProduct(int id,string name,double price):base(id,name,price) { }
 
         public double CalculateDiscount()
