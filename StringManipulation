@@ -1,0 +1,35 @@
+using System;
+
+namespace StringManipulation
+{
+    public class Program
+    {
+        static void Main(string[] args)
+        {
+           
+            if (args.Length == 0)
+            {
+                Console.WriteLine("Please pass input in the format: Name,Company,Location");
+                return;
+            }
+
+           
+            string input = args[0];
+
+            
+            string[] words = input.Split(',');
+
+           
+            if (words.Length == 3)
+            {
+                Console.WriteLine("Developer name is : " + words[0]);
+                Console.WriteLine("Company name is : " + words[1]);
+                Console.WriteLine("Location is : " + words[2]);
+            }
+            else
+            {
+                Console.WriteLine("Invalid format. Please provide exactly 3 values separated by commas.");
+            }
+        }
+    }
+}
