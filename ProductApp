@@ -1,0 +1,54 @@
+//Product.cs
+using System;
+namespace ProductApp
+{
+    public class Product
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public double Price { get; set; }
+        public double Discount {  get; set; }
+     
+
+        public Product(int id, string name, double price, double discount)
+        {
+            Id = id;
+            Name = name;
+            Price = price;
+            Discount = discount;
+        }
+
+        public double CalculateDiscount()
+        {
+            return Price-(Discount/100)*Price;
+         
+        }
+        public void Display() 
+        {
+            Console.WriteLine($"Id : {Id}");
+            Console.WriteLine($"Name : {Name}");
+            Console.WriteLine($"Price : {Price}");
+            Console.WriteLine($"Discount on Price : {Discount}%");
+            Console.WriteLine($"Price after Discount : {CalculateDiscount()}");
+            Console.WriteLine();
+        }
+    }
+}
+//Program.cs
+using System;
+namespace ProductApp
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            Product p1 = new Product(1,"Mobile",30000,5);
+            Console.WriteLine("Product 1 Details");
+            p1.Display();
+
+            Product p2 = new Product(2, "TV", 50000, 10);
+            Console.WriteLine("Product 2 Details");
+            p2.Display();
+        }
+    }
+}
