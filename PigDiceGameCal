@@ -1,0 +1,143 @@
+using System;
+
+namespace PigDiceGame
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Game game = new Game();
+            game.Play();
+        }
+    }
+
+    class Game
+    {
+        private Dice dice = new Dice();
+        private Score totalScore = new Score();
+        private TurnCounter turnCounter = new TurnCounter();
+
+        public void Play()
+        {
+            while (!totalScore.HasReached(20))
+            {
+                Turn turn = new Turn(dice);
+                turnCounter.Increment();
+                Console.WriteLine("TURN " + turnCounter.Current());
+
+                int turnScore = turn.Play();
+                totalScore.Add(turnScore);
+
+                Console.WriteLine("Total Score: " + totalScore.Current());
+            }
+
+            Console.WriteLine("You finished in " + turnCounter.Current() + " turns.");
+            Console.WriteLine("Game over!");
+        }
+    }
+
+    class Turn
+    {
+        private Dice dice;
+        private PlayerInput input = new PlayerInput();
+        private int scoreThisTurn;
+
+        public Turn(Dice dice)
+        {
+            this.dice = dice;
+            scoreThisTurn = 0;
+        }
+
+        public int Play()
+        {
+            while (true)
+            {
+                string decision = input.GetChoice();
+
+                if (decision == "roll")
+                {
+                    int rolledValue = dice.Roll();
+                    Console.WriteLine("Die: " + rolledValue);
+
+                    if (rolledValue == 1)
+                    {
+                        Console.WriteLine("Turn over. No score.");
+                        return 0;
+                    }
+
+                    scoreThisTurn += rolledValue;
+                }
+
+                if (decision == "hold")
+                {
+                    Console.WriteLine("Score this turn: " + scoreThisTurn);
+                    return scoreThisTurn;
+                }
+            }
+        }
+    }
+
+    class Dice
+    {
+        private Random random = new Random();
+
+        public int Roll()
+        {
+            return random.Next(1, 7);
+        }
+    }
+
+    class Score
+    {
+        private int value = 0;
+
+        public void Add(int points)
+        {
+            value += points;
+        }
+
+        public int Current()
+        {
+            return value;
+        }
+
+        public bool HasReached(int target)
+        {
+            return value >= target;
+        }
+    }
+
+    class TurnCounter
+    {
+        private int count = 0;
+
+        public void Increment()
+        {
+            count++;
+        }
+
+        public int Current()
+        {
+            return count;
+        }
+    }
+
+    class PlayerInput
+    {
+        public string GetChoice()
+        {
+            while (true)
+            {
+                Console.Write("Roll or hold? (r/h): ");
+                string input = Console.ReadLine()?.Trim().ToLower();
+
+                if (input == "r")
+                    return "roll";
+                if (input == "h")
+                    return "hold";
+
+                Console.WriteLine("Invalid input. Please enter 'r' or 'h'.");
+            }
+        }
+    }
+}
