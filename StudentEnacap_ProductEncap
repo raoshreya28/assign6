@@ -1,0 +1,198 @@
+//Student.cs
+using System;
+namespace StudentEncapApp
+{
+    class Student
+    {
+        private int rollNo;
+        private string name;
+        private double cgpa;
+
+        public int RollNo
+        {
+            get { return rollNo; }
+            set
+            {
+                if (value > 0)
+                    rollNo = value;
+                else
+                    rollNo = 0;
+            }
+        }
+
+        public string Name
+        {
+            get { return name; }
+            set
+            {
+                if (!string.IsNullOrEmpty(value) && value.Length >= 5)
+                    name = value;
+                else
+                    name = "";
+            }
+        }
+
+        public double Cgpa
+        {
+            get { return cgpa; }
+            set
+            {
+                if (value >= 1 && value <= 10)
+                    cgpa = value;
+                else
+                    cgpa = 0;
+            }
+        }
+
+        public double GetPercentage()
+        {
+            return cgpa * 9.5;
+        }
+    }
+}
+
+//Program.cs
+using System;
+
+namespace StudentEncapApp
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Student s = new Student();
+
+            Console.Write("Enter Roll No: ");
+            s.RollNo = Convert.ToInt32(Console.ReadLine());
+
+            Console.Write("Enter Name: ");
+            s.Name = Console.ReadLine();
+
+            Console.Write("Enter CGPA: ");
+            s.Cgpa = Convert.ToDouble(Console.ReadLine());
+
+            Console.WriteLine("\n--- Student Details ---");
+            Console.WriteLine("Roll No: " + s.RollNo);
+            Console.WriteLine("Name: " + s.Name);
+            Console.WriteLine("CGPA: " + s.Cgpa);
+            Console.WriteLine("Percentage: " + s.GetPercentage() + "%");
+        }
+    }
+}
+
+ProductApp_Encap
+//Product.cs
+using System;
+
+namespace ProductApp
+{
+    public class Product
+    {
+        private int id;
+        private string name;
+        private double price;
+        private double discount;
+
+        public int Id
+        {
+            get { return id; }
+            set
+            {
+                if (value > 0)
+                    id = value;
+                else
+                {
+                    Console.WriteLine("Invalid ID. Must be positive.");
+                    id = 0;
+                }
+            }
+        }
+
+        public string Name
+        {
+            get { return name; }
+            set
+            {
+                if (!string.IsNullOrWhiteSpace(value))
+                    name = value;
+                else
+                {
+                    Console.WriteLine("Invalid Name. Cannot be empty.");
+                    name = "";
+                }
+            }
+        }
+
+        public double Price
+        {
+            get { return price; }
+            set
+            {
+                if (value >= 0)
+                    price = value;
+                else
+                {
+                    Console.WriteLine("Invalid Price. Cannot be negative.");
+                    price = 0;
+                }
+            }
+        }
+
+        public double Discount
+        {
+            get { return discount; }
+            set
+            {
+                if (value >= 0 && value <= 100)
+                    discount = value;
+                else
+                {
+                    Console.WriteLine("Invalid Discount. Must be between 0 and 100.");
+                    discount = 0;
+                }
+            }
+        }
+
+        public Product(int id, string name, double price, double discount)
+        {
+            Id = id; // use property to trigger validation
+            Name = name;
+            Price = price;
+            Discount = discount;
+        }
+
+        public double CalculateDiscount()
+        {
+            return Price - (Discount / 100) * Price;
+        }
+
+        public void Display()
+        {
+            Console.WriteLine($"Id: {Id}");
+            Console.WriteLine($"Name: {Name}");
+            Console.WriteLine($"Price: {Price}");
+            Console.WriteLine($"Discount: {Discount}%");
+            Console.WriteLine($"Price After Discount: {CalculateDiscount()}");
+            Console.WriteLine();
+        }
+    }
+}
+//Program.cs
+using System;
+
+namespace ProductApp
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            Product p1 = new Product(1, "Mobile", 30000, 5);
+            Console.WriteLine("Product 1 Details");
+            p1.Display();
+
+            Product p2 = new Product(2, "TV", 50000, 10);
+            Console.WriteLine("Product 2 Details");
+            p2.Display();
+        }
+    }
+}
