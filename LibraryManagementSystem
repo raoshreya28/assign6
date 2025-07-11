@@ -36,14 +36,15 @@ namespace LibraryManagementSystem
     {
         public int MemberId { get; set; }
         public string Name { get; set; }
-        public List<Book> Borrowedbooks { get; set; } = new List<Book>();
+        public List<Book> BorrowedBooks { get; set; } = new List<Book>();
 
         public void Display()
         {
-            Console.WriteLine($"MemberId: {MemberId}, Name : {Name}, List of Borrowed books :{Borrowedbooks.Count}");
+            Console.WriteLine($"MemberId: {MemberId}, Name : {Name}, List of Borrowed books :{BorrowedBooks.Count}");
         }
     }
 }
+
 //ILibrary.cs
 using System;
 using System.Collections.Generic;
@@ -178,12 +179,12 @@ namespace LibraryManagementSystem
                 return;
             }
 
-            if (m.Borrowedbooks.Count >= 3)
+            if (m.BorrowedBooks.Count >= 3)
             {
                 throw new BookLimitException("Cannot borrow more than 3 books");
             }
 
-            m.Borrowedbooks.Add(b);
+            m.BorrowedBooks.Add(b);
             b.Availability = false;
             BookBorrowed?.Invoke("Book borrowed. Return in 7 days.");
         }
@@ -197,7 +198,7 @@ namespace LibraryManagementSystem
             int bid = Convert.ToInt32(Console.ReadLine());
 
             var m = members.FirstOrDefault(x => x.MemberId == mid);
-            var b = m?.Borrowedbooks.FirstOrDefault(x => x.Id == bid);
+            var b = m?.BorrowedBooks.FirstOrDefault(x => x.Id == bid);
 
             if (b == null)
             {
@@ -205,7 +206,7 @@ namespace LibraryManagementSystem
                 return;
             }
 
-            m.Borrowedbooks.Remove(b);
+            m.BorrowedBooks.Remove(b);
             b.Availability = true;
             BookReturned?.Invoke("Book returned successfully");
         }
@@ -215,7 +216,7 @@ namespace LibraryManagementSystem
             Console.WriteLine("Members with borrowed books:");
             foreach (var m in members)
             {
-                if (m.Borrowedbooks.Count > 0)
+                if (m.BorrowedBooks.Count > 0)
                 {
                     m.Display();
                 }
@@ -227,7 +228,7 @@ namespace LibraryManagementSystem
             Console.WriteLine("All borrowed books:");
             foreach (var m in members)
             {
-                foreach (var b in m.Borrowedbooks)
+                foreach (var b in m.BorrowedBooks)
                 {
                     Console.WriteLine($"Book: {b.Name}, Borrowed by: {m.Name}");
                 }
