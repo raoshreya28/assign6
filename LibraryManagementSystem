@@ -1,0 +1,370 @@
+//Book.cs
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace LibraryManagementSystem
+{
+    public class Book
+    {
+        public int Id {  get; set; }
+        public string Name { get; set; }
+        public string Author { get; set; }
+        public bool Availability { get; set; } = true;
+
+       
+
+        public void Display() 
+        {
+            Console.WriteLine($"Id : {Id}, Name: {Name}, Author : {Author}, Availability: {Availability}");
+        
+        }
+    }
+}
+//Member.cs
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace LibraryManagementSystem
+{
+    public class Member
+    {
+        public int MemberId { get; set; }
+        public string Name { get; set; }
+        public List<Book> Borrowedbooks { get; set; } = new List<Book>();
+
+        public void Display()
+        {
+            Console.WriteLine($"MemberId: {MemberId}, Name : {Name}, List of Borrowed books :{Borrowedbooks.Count}");
+        }
+    }
+}
+//ILibrary.cs
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace LibraryManagementSystem
+{
+    public interface ILibrary
+    {
+            void AddBook();
+            void ViewAllBooks();
+            void ViewBooksByAuthor();
+            void ViewAvailableBooks();
+            void AddMember();
+            void ViewAllMembers();
+            void BorrowBook();
+            void ReturnBook();
+            void ShowMembersWithBorrowedBooks();
+            void ShowAllBorrowedBooks();
+            void SortBooks();
+    }
+}
+
+//Library.cs
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace LibraryManagementSystem
+{
+    public delegate void Notify(string message);
+
+    public class Library : ILibrary
+    {
+        public List<Book> books = new List<Book>();
+        public List<Member> members = new List<Member>();
+
+        public event Notify BookBorrowed;
+        public event Notify BookReturned;
+
+        public void AddBook()
+        {
+            Console.WriteLine("Add a new book");
+            Console.Write("Enter the id: ");
+            int id = Convert.ToInt32(Console.ReadLine());
+
+            Console.Write("Enter the name of the book: ");
+            string name = Console.ReadLine();
+
+            Console.Write("Enter the author: ");
+            string author = Console.ReadLine();
+
+            books.Add(new Book { Id = id, Name = name, Author = author, Availability = true });
+            Console.WriteLine("Book added");
+        }
+
+        public void ViewAllBooks()
+        {
+            Console.WriteLine("All books:");
+            foreach (var b in books)
+            {
+                b.Display();
+            }
+        }
+
+        public void ViewBooksByAuthor()
+        {
+            Console.Write("Enter the author's name: ");
+            string auth = Console.ReadLine();
+
+            var result = from b in books
+                         where b.Author == auth
+                         select b;
+
+            foreach (var b in result)
+            {
+                b.Display();
+            }
+        }
+
+        public void ViewAvailableBooks()
+        {
+            Console.WriteLine("Available books:");
+            var result = from b in books
+                         where b.Availability == true
+                         select b;
+
+            foreach (var b in result)
+            {
+                b.Display();
+            }
+        }
+
+        public void AddMember()
+        {
+            Console.WriteLine("Add a member");
+            Console.Write("Enter the id: ");
+            int id = Convert.ToInt32(Console.ReadLine());
+
+            Console.Write("Enter the name of the member: ");
+            string name = Console.ReadLine();
+
+            members.Add(new Member { MemberId = id, Name = name });
+            Console.WriteLine("Member added");
+        }
+
+        public void ViewAllMembers()
+        {
+            Console.WriteLine("All members:");
+            foreach (var m in members)
+            {
+                m.Display();
+            }
+        }
+
+        public void BorrowBook()
+        {
+            Console.Write("Enter member id: ");
+            int mid = Convert.ToInt32(Console.ReadLine());
+
+            Console.Write("Enter book id: ");
+            int bid = Convert.ToInt32(Console.ReadLine());
+
+            var m = members.FirstOrDefault(x => x.MemberId == mid);
+            var b = books.FirstOrDefault(x => x.Id == bid);
+
+            if (m == null || b == null || !b.Availability)
+            {
+                Console.WriteLine("Member or book not found or unavailable");
+                return;
+            }
+
+            if (m.Borrowedbooks.Count >= 3)
+            {
+                throw new BookLimitException("Cannot borrow more than 3 books");
+            }
+
+            m.Borrowedbooks.Add(b);
+            b.Availability = false;
+            BookBorrowed?.Invoke("Book borrowed. Return in 7 days.");
+        }
+
+        public void ReturnBook()
+        {
+            Console.Write("Enter member id: ");
+            int mid = Convert.ToInt32(Console.ReadLine());
+
+            Console.Write("Enter book id: ");
+            int bid = Convert.ToInt32(Console.ReadLine());
+
+            var m = members.FirstOrDefault(x => x.MemberId == mid);
+            var b = m?.Borrowedbooks.FirstOrDefault(x => x.Id == bid);
+
+            if (b == null)
+            {
+                Console.WriteLine("Book not found in borrowed list");
+                return;
+            }
+
+            m.Borrowedbooks.Remove(b);
+            b.Availability = true;
+            BookReturned?.Invoke("Book returned successfully");
+        }
+
+        public void ShowMembersWithBorrowedBooks()
+        {
+            Console.WriteLine("Members with borrowed books:");
+            foreach (var m in members)
+            {
+                if (m.Borrowedbooks.Count > 0)
+                {
+                    m.Display();
+                }
+            }
+        }
+
+        public void ShowAllBorrowedBooks()
+        {
+            Console.WriteLine("All borrowed books:");
+            foreach (var m in members)
+            {
+                foreach (var b in m.Borrowedbooks)
+                {
+                    Console.WriteLine($"Book: {b.Name}, Borrowed by: {m.Name}");
+                }
+            }
+        }
+
+        public void SortBooks()
+        {
+            Console.WriteLine("Books sorted by author and title:");
+            var sorted = books.OrderBy(b => b.Author).ThenBy(b => b.Name).ToList();
+            foreach (var b in sorted)
+            {
+                b.Display();
+            }
+        }
+    }
+}
+//Program.cs
+using System;
+
+namespace LibraryManagementSystem
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            Library lib = new Library();
+
+          
+            lib.BookBorrowed += ShowMessage;
+            lib.BookReturned += ShowMessage;
+
+            while (true)
+            {
+                Console.WriteLine("\n--- Library Management System ---");
+                Console.WriteLine("1. Add Book");
+                Console.WriteLine("2. View All Books");
+                Console.WriteLine("3. View Books by Author");
+                Console.WriteLine("4. View Available Books");
+                Console.WriteLine("5. Add Member");
+                Console.WriteLine("6. View All Members");
+                Console.WriteLine("7. Borrow Book");
+                Console.WriteLine("8. Return Book");
+                Console.WriteLine("9. Show Members with Borrowed Books");
+                Console.WriteLine("10. Show All Borrowed Books");
+                Console.WriteLine("11. Sort Books by Author and Title");
+                Console.WriteLine("12. Exit");
+
+                Console.Write("Enter your choice: ");
+                int choice;
+                bool valid = int.TryParse(Console.ReadLine(), out choice);
+
+                if (!valid)
+                {
+                    Console.WriteLine("Please enter a valid number.");
+                    continue;
+                }
+
+                try
+                {
+                    switch (choice)
+                    {
+                        case 1:
+                            lib.AddBook();
+                            break;
+                        case 2:
+                            lib.ViewAllBooks();
+                            break;
+                        case 3:
+                            lib.ViewBooksByAuthor();
+                            break;
+                        case 4:
+                            lib.ViewAvailableBooks();
+                            break;
+                        case 5:
+                            lib.AddMember();
+                            break;
+                        case 6:
+                            lib.ViewAllMembers();
+                            break;
+                        case 7:
+                            lib.BorrowBook();
+                            break;
+                        case 8:
+                            lib.ReturnBook();
+                            break;
+                        case 9:
+                            lib.ShowMembersWithBorrowedBooks();
+                            break;
+                        case 10:
+                            lib.ShowAllBorrowedBooks();
+                            break;
+                        case 11:
+                            lib.SortBooks();
+                            break;
+                        case 12:
+                            Console.WriteLine("Exiting...");
+                            return;
+                        default:
+                            Console.WriteLine("Invalid choice. Try again.");
+                            break;
+                    }
+                }
+                catch (BookLimitException ex)
+                {
+                    Console.WriteLine("Error: " + ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Something went wrong: " + ex.Message);
+                }
+            }
+        }
+
+        
+       public static void ShowMessage(string msg)
+        {
+            Console.WriteLine($"[Notification] {msg}");
+        }
+    }
+}
+//BookLimitException.cs
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace LibraryManagementSystem
+{
+    public class BookLimitException:Exception
+    {
+        public BookLimitException(string message):base(message) 
+        { 
+          
+        
+        }
+    }
+}
