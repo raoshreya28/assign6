@@ -1,0 +1,256 @@
+//Course.cs
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace UniversityCourseEnrollment
+{
+    
+        public abstract class Course : IEnroll
+        {
+            public int id { get; set; }
+            public string name { get; set; }
+            public List<string> students = new List<string>();
+
+            public abstract void EnrollStudent(string studentName);
+
+            public void DisplayEnrolledStudents()
+            {
+                Console.WriteLine($"Course: {name} (ID: {id})");
+                if (students.Count == 0)
+                {
+                    Console.WriteLine("No students enrolled.");
+                }
+                else
+                {
+                    foreach (string s in students)
+                    {
+                        Console.WriteLine($"- {s}");
+                    }
+                }
+            }
+        }
+    
+
+}
+//Ienroll.cs
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace UniversityCourseEnrollment
+{
+    
+        public interface IEnroll
+        {
+            void EnrollStudent(string studentName);
+            void DisplayEnrolledStudents();
+        }
+    
+
+}
+//OnlineCourse.cs
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace UniversityCourseEnrollment
+{
+    
+        public class OnlineCourse : Course
+        {
+            public override void EnrollStudent(string studentName)
+            {
+                students.Add(studentName);
+                Console.WriteLine("Student enrolled in online course.");
+            }
+        }
+    
+
+}
+//InPersonCourse.cs
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace UniversityCourseEnrollment
+{
+   
+        public class InPersonCourse : Course
+        {
+            public string location { get; set; }
+
+            public override void EnrollStudent(string studentName)
+            {
+                if (string.IsNullOrWhiteSpace(location))
+                {
+                    Console.WriteLine("Course must have a valid location to enroll students.");
+                    return;
+                }
+
+                students.Add(studentName);
+                Console.WriteLine("Student enrolled in in-person course.");
+            }
+        }
+    
+
+}
+//LabCourse.cs
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace UniversityCourseEnrollment
+{
+        public class LabCourse : Course
+        {
+            public int maxStudents { get; set; }
+
+            public override void EnrollStudent(string studentName)
+            {
+                if (students.Count >= maxStudents)
+                {
+                    Console.WriteLine("Cannot enroll. Lab course has reached max capacity.");
+                    return;
+                }
+
+                students.Add(studentName);
+                Console.WriteLine("Student enrolled in lab course.");
+            }
+        }
+    
+
+}
+//Program.cs
+namespace UniversityCourseEnrollment
+{
+    using System;
+    using System.Collections.Generic;
+
+    
+        internal class Program
+        {
+            static List<Course> courseList = new List<Course>();
+
+            static void Main(string[] args)
+            {
+                while (true)
+                {
+                    Console.WriteLine("\n--- University Course Enrollment System ---");
+                    Console.WriteLine("1. Add Online Course");
+                    Console.WriteLine("2. Add In-Person Course");
+                    Console.WriteLine("3. Add Lab Course");
+                    Console.WriteLine("4. Enroll Student");
+                    Console.WriteLine("5. View All Courses and Enrolled Students");
+                    Console.WriteLine("6. Exit");
+                    Console.Write("Enter your choice: ");
+                    int ch = Convert.ToInt32(Console.ReadLine());
+
+                    switch (ch)
+                    {
+                        case 1:
+                            AddOnlineCourse();
+                            break;
+                        case 2:
+                            AddInPersonCourse();
+                            break;
+                        case 3:
+                            AddLabCourse();
+                            break;
+                        case 4:
+                            EnrollStudent();
+                            break;
+                        case 5:
+                            ViewAllCourses();
+                            break;
+                        case 6:
+                            return;
+                        default:
+                            Console.WriteLine("Invalid choice.");
+                            break;
+                    }
+                }
+            }
+
+            static void AddOnlineCourse()
+            {
+                OnlineCourse online = new OnlineCourse();
+                Console.Write("Enter course id: ");
+                online.id = Convert.ToInt32(Console.ReadLine());
+                Console.Write("Enter course name: ");
+                online.name = Console.ReadLine();
+                courseList.Add(online);
+                Console.WriteLine("Online course added.");
+            }
+
+            static void AddInPersonCourse()
+            {
+                InPersonCourse inPerson = new InPersonCourse();
+                Console.Write("Enter course id: ");
+                inPerson.id = Convert.ToInt32(Console.ReadLine());
+                Console.Write("Enter course name: ");
+                inPerson.name = Console.ReadLine();
+                Console.Write("Enter location: ");
+                inPerson.location = Console.ReadLine();
+                courseList.Add(inPerson);
+                Console.WriteLine("In-person course added.");
+            }
+
+            static void AddLabCourse()
+            {
+                LabCourse lab = new LabCourse();
+                Console.Write("Enter course id: ");
+                lab.id = Convert.ToInt32(Console.ReadLine());
+                Console.Write("Enter course name: ");
+                lab.name = Console.ReadLine();
+                Console.Write("Enter max students: ");
+                lab.maxStudents = Convert.ToInt32(Console.ReadLine());
+                courseList.Add(lab);
+                Console.WriteLine("Lab course added.");
+            }
+
+            static void EnrollStudent()
+            {
+                Console.Write("Enter course id: ");
+                int id = Convert.ToInt32(Console.ReadLine());
+                Course selectedCourse = courseList.Find(c => c.id == id);
+                if (selectedCourse == null)
+                {
+                    Console.WriteLine("Course not found.");
+                    return;
+                }
+
+                Console.Write("Enter student name: ");
+                string studentName = Console.ReadLine();
+                selectedCourse.EnrollStudent(studentName);
+            }
+
+            static void ViewAllCourses()
+            {
+                if (courseList.Count == 0)
+                {
+                    Console.WriteLine("No courses available.");
+                    return;
+                }
+
+                foreach (var c in courseList)
+                {
+                    c.DisplayEnrolledStudents();
+                    Console.WriteLine();
+                }
+            }
+        }
+    
+
+}
+
