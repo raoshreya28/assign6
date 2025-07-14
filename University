@@ -108,8 +108,8 @@ namespace University
             Student student1 = new Student(1, "Mumbai", new DateTime(2005, 6, 10), "Computer Engineering");
             Student student2 = new Student(2, "Mumbai", new DateTime(2005, 8, 5), "Computer Engineering");
 
-            Professor professor1 = new Professor(101, "Mumbai", new DateTime(1987, 4, 20), 40000);
-            Professor professor2 = new Professor(102, "Mumbai", new DateTime(1978, 4, 20), 60000);
+            Professor professor1 = new Professor(101, "Mumbai", new DateTime(1987, 6, 6), 40000);
+            Professor professor2 = new Professor(102, "Mumbai", new DateTime(1978, 5, 4), 60000);
             
             Console.WriteLine("--- Student Details ---");
             student1.Display();
@@ -123,3 +123,4 @@ namespace University
     }
 
 }
+
