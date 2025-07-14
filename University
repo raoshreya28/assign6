@@ -1,0 +1,125 @@
+//Person.cs
+using System;
+namespace University
+{
+    public class Person
+    {
+        public int Id { get; set; }
+        public string Address { get; set; }
+        public DateTime Dob { get; set; }
+
+        public Person(int id, string address, DateTime dob)
+        {
+            Id = id;
+            Address = address;
+            Dob = dob;
+        }
+
+        public virtual void Display()
+        {
+            Console.WriteLine($"ID: {Id}, Address: {Address}, DOB: {Dob.ToShortDateString()}");
+        }
+    }
+}
+//Student.cs
+using System;
+
+namespace University
+{
+    public class Student : Person
+    {
+        public string Branch { get; set; }
+
+        public Student(int id, string address, DateTime dob, string branch)
+            : base(id, address, dob)
+        {
+            Branch = branch;
+        }
+
+        public override void Display()
+        {
+            base.Display();
+            Console.WriteLine($"Branch: {Branch}");
+        }
+    }
+}
+//SalariedEmployee.cs
+
+namespace University
+{
+    public abstract class SalariedEmployee : Person
+    {
+        public double BasicSalary { get; set; }
+
+        public SalariedEmployee(int id, string address, DateTime dob, double basicSalary)
+            : base(id, address, dob)
+        {
+            BasicSalary = basicSalary;
+        }
+
+        public abstract double CalculateSalary();
+    }
+}
+//Professor.cs
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace University
+{
+  
+    public class Professor : SalariedEmployee
+    {
+        public Professor(int id, string address, DateTime dob, double basicSalary)
+            : base(id, address, dob, basicSalary)
+        {
+        }
+
+        public override double CalculateSalary()
+        {
+            double hra = 0.2 * BasicSalary;
+            double da = 0.1 * BasicSalary;  
+            double pf = 0.05 * BasicSalary; 
+            return BasicSalary + hra + da - pf;
+        }
+
+        public override void Display()
+        {
+            base.Display();
+            Console.WriteLine($"Basic Salary: {BasicSalary}");
+            Console.WriteLine($"Total Salary: {CalculateSalary()}");
+        }
+    }
+
+}
+
+//Program.cs
+using System;
+namespace University
+{
+ 
+
+    public class Program
+    {
+        public static void Main()
+        {
+            Student student1 = new Student(1, "Mumbai", new DateTime(2005, 6, 10), "Computer Engineering");
+            Student student2 = new Student(2, "Mumbai", new DateTime(2005, 8, 5), "Computer Engineering");
+
+            Professor professor1 = new Professor(101, "Mumbai", new DateTime(1987, 4, 20), 40000);
+            Professor professor2 = new Professor(102, "Mumbai", new DateTime(1978, 4, 20), 60000);
+            
+            Console.WriteLine("--- Student Details ---");
+            student1.Display();
+            student2.Display();
+
+            Console.WriteLine("");
+            Console.WriteLine("--- Professor Details ---");
+            professor1.Display();
+            professor2.Display();
+        }
+    }
+
+}
