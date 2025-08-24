@@ -1,0 +1,180 @@
+//index.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic Tac Toe</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Tic Tac Toe</h1>
+    <div id="game-board"></div>
+    <div id="status">Player X's Turn</div>
+    <button id="resetBtn">Reset Game</button>
+
+    <script src="game.js"></script>
+</body>
+</html>
+
+//style.css
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin-top: 50px;
+    background-color: beige;
+}
+
+#game-board {
+    display: grid;
+    grid-template-columns: repeat(3, 100px);
+    grid-gap: 5px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.cell {
+    width: 100px;
+    height: 100px;
+    background-color: #eee;
+    border: 2px solid #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 3em;
+    cursor: pointer;
+}
+
+.cell.marked {
+    cursor: not-allowed;
+}
+
+#status {
+    margin-top: 20px;
+    font-size: 1.5em;
+}
+
+button {
+    margin-top: 10px;
+    padding: 10px 20px;
+    font-size: 1em;
+}
+
+//game.js
+var TicTacToeFacade = (function() {
+    // Private variables
+    var board = [
+        ['', '', ''],
+        ['', '', ''],
+        ['', '', '']
+    ];
+    var currentPlayer = 'X';
+    var gameActive = true;
+
+    var statusText = document.getElementById('status');
+    var boardDiv = document.getElementById('game-board');
+
+    function initBoard() {
+        boardDiv.innerHTML = '';
+        for (var row = 0; row < 3; row++) {
+            for (var col = 0; col < 3; col++) {
+                var cell = document.createElement('div');
+                cell.classList.add('cell');
+                cell.setAttribute('data-row', row);
+                cell.setAttribute('data-col', col);
+
+               
+                cell.addEventListener('click', function() {
+                    var r = parseInt(this.getAttribute('data-row'));
+                    var c = parseInt(this.getAttribute('data-col'));
+                    TicTacToeFacade.makeMove(r, c);
+                });
+
+                boardDiv.appendChild(cell);
+            }
+        }
+        updateStatus("Player " + currentPlayer + "'s Turn");
+    }
+
+    
+    function updateStatus(message) {
+        statusText.textContent = message;
+    }
+
+    // Handle a move
+    function handleMove(row, col) {
+        if (board[row][col] !== '' || !gameActive) return;
+
+        board[row][col] = currentPlayer;
+
+        var cells = boardDiv.children;
+        for (var i = 0; i < cells.length; i++) {
+            var r = parseInt(cells[i].getAttribute('data-row'));
+            var c = parseInt(cells[i].getAttribute('data-col'));
+            if (r === row && c === col) {
+                cells[i].textContent = currentPlayer;
+                cells[i].classList.add('marked');
+            }
+        }
+
+        // Check for win or draw
+        if (checkWin(currentPlayer)) {
+            updateStatus("Player " + currentPlayer + " Wins! ");
+            gameActive = false;
+        } else if (checkDraw()) {
+            updateStatus("It's a Draw! ");
+            gameActive = false;
+        } else {
+            // Switch player
+            currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+            updateStatus("Player " + currentPlayer + "'s Turn");
+        }
+    }
+
+    // Check win
+    function checkWin(player) {
+        for (var i = 0; i < 3; i++) {
+            // Check rows
+            if (board[i][0] === player && board[i][1] === player && board[i][2] === player) return true;
+            // Check columns
+            if (board[0][i] === player && board[1][i] === player && board[2][i] === player) return true;
+        }
+        // Check diagonals
+        if (board[0][0] === player && board[1][1] === player && board[2][2] === player) return true;
+        if (board[0][2] === player && board[1][1] === player && board[2][0] === player) return true;
+        return false;
+    }
+
+    // Check draw
+    function checkDraw() {
+        for (var row = 0; row < 3; row++) {
+            for (var col = 0; col < 3; col++) {
+                if (board[row][col] === '') return false;
+            }
+        }
+        return true;
+    }
+
+    // Reset game
+    function resetGame() {
+        board = [
+            ['', '', ''],
+            ['', '', ''],
+            ['', '', '']
+        ];
+        currentPlayer = 'X';
+        gameActive = true;
+        initBoard();
+    }
+
+    // Expose only public methods
+    return {
+        makeMove: handleMove,
+        resetGame: resetGame
+    };
+})();
+
+
+document.getElementById('resetBtn').addEventListener('click', function() {
+    TicTacToeFacade.resetGame();
+});
