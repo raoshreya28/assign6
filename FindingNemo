@@ -1,0 +1,151 @@
+//index.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finding Nemo</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Finding Nemo Game</h1>
+    
+
+    <div id="game-container">
+        <div id="game-board">
+            </div>
+    </div>
+    
+    <div id="message-area">
+        <p id="message">Click on a circle to find Nemo!</p>
+        <p id="attempts-left">You have 5 attempts left.</p>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
+//style.css
+body {
+    font-family: 'Arial', sans-serif;
+    text-align: center;
+    background-color: #f0f8ff; 
+    margin: 0;
+    padding: 20px;
+}
+
+h1, p {
+    color: #333;
+}
+
+#game-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+#game-board {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); /* 5 circles per row */
+    gap: 15px;
+    width: 650px;
+    background-color: white;
+    padding: 20px;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.circle {
+    width: 100px;
+    height: 100px;
+    background-color: #007BFF; /* Blue circles */
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.2s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.circle:hover {
+    transform: scale(1.05);
+}
+
+
+#message-area {
+    margin-top: 20px;
+}
+
+#message {
+    font-size: 2em;
+    font-weight: bold;
+    color: #333;
+}
+
+#attempts-left {
+    font-size: 1.2em;
+    color: #555;
+}
+
+.circle-image {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+//script.js
+document.addEventListener("DOMContentLoaded", function () {
+  const gameBoard = document.getElementById("game-board");
+  const messageDisplay = document.getElementById("message");
+  const attemptsDisplay = document.getElementById("attempts-left");
+
+  const totalAttempts = 5;
+  let attemptsLeft = totalAttempts;
+  let nemoPosition = Math.floor(Math.random() * 10); // random number
+  let gameOver = false;
+
+  const nemoImageURL = "images/images.jpg";   // Nemo image
+  const wrongImageURL = "images/wrong.jpg";   // Wrong guess image
+
+  // Create 10 circles
+  for (let i = 0; i < 10; i++) {
+    const circle = document.createElement("div");
+    circle.className = "circle";
+    circle.textContent = ""; // circles are empty by default
+    gameBoard.appendChild(circle);
+
+    circle.onclick = function () {
+      if (gameOver) return;
+
+      if (i === nemoPosition) {
+        // found Nemo
+        circle.innerHTML ='<img src="' + nemoImageURL + '" alt="Nemo" class="circle-image">';
+
+        messageDisplay.textContent = "Congratulations, You Won!!";
+        attemptsDisplay.textContent ="Attempts Required to Win: " + (totalAttempts - attemptsLeft + 1);
+        gameOver = true;
+      } else {
+       // wrong guess
+        circle.innerHTML ='<img src="' + wrongImageURL + '" alt="Wrong" class="circle-image">';
+        attemptsLeft--;
+        attemptsDisplay.textContent ="You have " + attemptsLeft + " attempts left.";
+        circle.onclick = null; //prevents double clicks
+
+
+        if (attemptsLeft === 0) {
+          // game over
+          messageDisplay.textContent = "Game Over!";
+          attemptsDisplay.textContent = "You ran out of attempts.";
+          gameOver = true;
+
+          // reveal Nemo
+          const allCircles = document.getElementsByClassName("circle");
+          allCircles[nemoPosition].innerHTML ='<img src="' + nemoImageURL + '" alt="Nemo" class="circle-image">';
+
+        }
+      }
+    };
+  }
+});
