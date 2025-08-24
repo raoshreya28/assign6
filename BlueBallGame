@@ -1,0 +1,165 @@
+//index.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guess the Number Game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Blue Ball Game</h1>
+        <div class="instructions">
+            <h3>Instructions of the Game:</h3>
+            <ul>
+                <li>Guess the number by moving the slider</li>
+                <li>Color changes to <span class="yellow">Yellow</span> if the guessed number is smaller</li>
+                <li>Color changes to <span class="red">Red</span> if the guessed number is greater</li>
+                <li>Color changes to <span class="green">Green</span> if the guessed number is correct</li>
+                <li>Maximum Attempts allowed is 6</li>
+            </ul>
+        </div>
+
+        <div class="game-board">
+            <input type="range" id="slider" min="1" max="10" value="1">
+            <div class="circles" id="circles"></div>
+            <p id="attempts">Attempt No. 0</p>
+            <p id="message"></p>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
+
+//style.css
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.container {
+    text-align: center;
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+}
+.container h1{
+    color:lightseagreen
+}
+
+.instructions {
+    border: 5px dashed green;
+    padding: 10px;
+    margin-bottom: 20px;
+    background-color: beige;
+}
+
+.instructions h3 {
+    color: black;
+}
+
+.instructions ul {
+    padding: 0;
+    text-align: left;
+}
+
+.instructions .yellow { color: yellow; }
+.instructions .red { color: red; }
+.instructions .green { color: green; }
+
+#slider {
+    width: 90%;
+    margin-bottom: 20px;
+}
+
+.circles {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: lightseagreen;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    border: 2px solid black;
+    transition: background-color 0.3s;
+}
+
+.circle.smaller { background-color: yellow; }
+.circle.greater { background-color: red; }
+.circle.correct { background-color: green; }
+
+#attempts {
+    font-weight: bold;
+    color: red;
+}
+
+#message {
+    font-weight: bold;
+    color: green;
+}
+
+//script.js
+document.addEventListener('DOMContentLoaded', function() {
+    const slider = document.getElementById('slider');
+    const circlesContainer = document.getElementById('circles');
+    const attemptsDisplay = document.getElementById('attempts');
+    const messageDisplay = document.getElementById('message');
+
+    // Random number between 1 and 10
+    const correctNumber = Math.floor(Math.random() * 10) + 1;
+    let attempts = 0;
+    let gameOver = false;
+
+    // Create 10 circles
+    for (let i = 1; i <= 10; i++) {
+        const circle = document.createElement('div');
+        circle.className = 'circle';
+        circle.textContent = i;
+        circlesContainer.appendChild(circle);
+    }
+
+    slider.addEventListener('change', function() {
+        if (gameOver) return;
+
+        attempts++;
+        attemptsDisplay.textContent = "Attempt No. " + attempts;
+
+        const guessedNumber = parseInt(slider.value);
+        const allCircles = circlesContainer.children;
+        const guessedCircle = allCircles[guessedNumber - 1];
+
+        if (guessedNumber === correctNumber) {
+            guessedCircle.className = 'circle correct';
+            messageDisplay.textContent = "You Win! Correct number guessed in " + attempts + " attempts!";
+            gameOver = true;
+            slider.disabled = true;
+        } else {
+            if (guessedNumber < correctNumber) {
+                guessedCircle.className = 'circle smaller';
+            } else {
+                guessedCircle.className = 'circle greater';
+            }
+        }
+
+        if (attempts >= 6 && !gameOver) {
+            messageDisplay.textContent = "Game Over! The correct number was " + correctNumber + ".";
+            messageDisplay.style.color = 'red';
+            gameOver = true;
+            slider.disabled = true;
+        }
+    });
+});
